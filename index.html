@@ -37,7 +37,10 @@
           <label for="test">Test type</label>
           <select id="test">
             <option value="corr">Correlation (Pearson r)</option>
+            <option value="ztest_one">Z test (one-sample)</option>
             <option value="ttest_ind">Independent samples t-test</option>
+            <option value="ttest_paired">Paired-samples t-test</option>
+            <option value="anova_oneway">One-way ANOVA</option>
             <option value="reg_simple">Simple linear regression</option>
           </select>
         </div>
@@ -81,6 +84,46 @@
         </div>
       </div>
       <div class="hint">Tip: If you enter <span class="mono">n</span>, the tool can infer df = n − 2 when df is blank.</div>
+    </div>
+
+    <!-- Z test (one-sample) -->
+    <div class="card hide" id="panel-ztest_one">
+      <h2 style="margin:0 0 10px; font-size:16px;">Z test (one-sample)</h2>
+      <div class="grid">
+        <div>
+          <label for="z_dv">Outcome / measure label</label>
+          <input id="z_dv" placeholder="e.g., Memory score" />
+        </div>
+        <div>
+          <label for="z_ref">Comparison value (μ or p0)</label>
+          <input id="z_ref" placeholder="e.g., 50 (population mean) or 0.50 (proportion)" />
+        </div>
+        <div>
+          <label for="z_m">Sample mean or proportion (M or p̂)</label>
+          <input id="z_m" placeholder="e.g., 53.2 or 0.62" />
+        </div>
+        <div>
+          <label for="z_sd">Population SD (σ) (optional)</label>
+          <input id="z_sd" placeholder="e.g., 10.0 (if known)" />
+        </div>
+        <div>
+          <label for="z_n">n (optional)</label>
+          <input id="z_n" placeholder="e.g., 120" />
+        </div>
+        <div>
+          <label for="z_z">z value</label>
+          <input id="z_z" placeholder="e.g., 2.34" />
+        </div>
+        <div>
+          <label for="z_p">p (decimal)</label>
+          <input id="z_p" placeholder="e.g., 0.019 or 0.0004" />
+        </div>
+        <div>
+          <label for="z_r">Effect size r (optional)</label>
+          <input id="z_r" placeholder="e.g., 0.21" />
+        </div>
+      </div>
+      <div class="hint">Note: This generator assumes you already have the <span class="mono">z</span> and <span class="mono">p</span> from software/output. (n and effect size are optional.)</div>
     </div>
 
     <!-- Independent t-test -->
@@ -132,6 +175,98 @@
           <input id="t_d" placeholder="e.g., 0.82" />
         </div>
       </div>
+    </div>
+
+    <!-- Paired t-test -->
+    <div class="card hide" id="panel-ttest_paired">
+      <h2 style="margin:0 0 10px; font-size:16px;">Paired-samples t-test</h2>
+      <div class="grid">
+        <div>
+          <label for="tp_dv">Outcome (DV) label</label>
+          <input id="tp_dv" placeholder="e.g., Stress score" />
+        </div>
+        <div>
+          <label for="tp_t1">Time/Condition 1 label</label>
+          <input id="tp_t1" placeholder="e.g., Pre-test" />
+        </div>
+        <div>
+          <label for="tp_t2">Time/Condition 2 label</label>
+          <input id="tp_t2" placeholder="e.g., Post-test" />
+        </div>
+        <div>
+          <label for="tp_m1">Condition 1 mean (M)</label>
+          <input id="tp_m1" placeholder="e.g., 6.10" />
+        </div>
+        <div>
+          <label for="tp_sd1">Condition 1 SD</label>
+          <input id="tp_sd1" placeholder="e.g., 1.40" />
+        </div>
+        <div>
+          <label for="tp_m2">Condition 2 mean (M)</label>
+          <input id="tp_m2" placeholder="e.g., 5.30" />
+        </div>
+        <div>
+          <label for="tp_sd2">Condition 2 SD</label>
+          <input id="tp_sd2" placeholder="e.g., 1.20" />
+        </div>
+        <div>
+          <label for="tp_t">t value</label>
+          <input id="tp_t" placeholder="e.g., 2.75" />
+        </div>
+        <div>
+          <label for="tp_df">df</label>
+          <input id="tp_df" placeholder="e.g., 29" />
+        </div>
+        <div>
+          <label for="tp_p">p (decimal)</label>
+          <input id="tp_p" placeholder="e.g., 0.010 or 0.043" />
+        </div>
+        <div>
+          <label for="tp_dz">Effect size dz (optional)</label>
+          <input id="tp_dz" placeholder="e.g., 0.51" />
+        </div>
+      </div>
+      <div class="hint">Tip: For paired tests, many units prefer <span class="mono">dz</span> (or sometimes <span class="mono">d</span> for dependent means). Use whatever your rubric expects.</div>
+    </div>
+
+    <!-- One-way ANOVA -->
+    <div class="card hide" id="panel-anova_oneway">
+      <h2 style="margin:0 0 10px; font-size:16px;">One-way ANOVA</h2>
+      <div class="grid">
+        <div>
+          <label for="a_dv">Outcome (DV) label</label>
+          <input id="a_dv" placeholder="e.g., Exam score" />
+        </div>
+        <div>
+          <label for="a_iv">Factor / grouping variable</label>
+          <input id="a_iv" placeholder="e.g., Study strategy" />
+        </div>
+        <div>
+          <label for="a_levels">Number of groups (k)</label>
+          <input id="a_levels" placeholder="e.g., 3" />
+        </div>
+        <div>
+          <label for="a_f">F value</label>
+          <input id="a_f" placeholder="e.g., 5.62" />
+        </div>
+        <div>
+          <label for="a_df1">df1 (between)</label>
+          <input id="a_df1" placeholder="e.g., 2" />
+        </div>
+        <div>
+          <label for="a_df2">df2 (within)</label>
+          <input id="a_df2" placeholder="e.g., 57" />
+        </div>
+        <div>
+          <label for="a_p">p (decimal)</label>
+          <input id="a_p" placeholder="e.g., 0.006 or 0.043" />
+        </div>
+        <div>
+          <label for="a_eta">η² or partial η² (optional)</label>
+          <input id="a_eta" placeholder="e.g., 0.16" />
+        </div>
+      </div>
+      <div class="hint">Note: This formats the omnibus ANOVA result. Post-hoc tests are not generated here.</div>
     </div>
 
     <!-- Simple regression -->
@@ -186,7 +321,7 @@
       <div style="margin-top:12px;">
         <label for="out">APA output</label>
         <textarea id="out" readonly></textarea>
-        <div class="hint">Formatting rules: italic letters are shown as plain text here (t, p, r, F). You can italicize in your document if required.</div>
+        <div class="hint">Formatting rules: italic letters are shown as plain text here (t, p, r, F, z). You can italicize in your document if required.</div>
       </div>
     </div>
 
@@ -197,7 +332,7 @@
   const $ = (id) => document.getElementById(id);
 
   function showPanel(test) {
-    ["corr", "ttest_ind", "reg_simple"].forEach(t => {
+    ["corr", "ztest_one", "ttest_ind", "ttest_paired", "anova_oneway", "reg_simple"].forEach(t => {
       const panel = $("panel-" + t);
       panel.classList.toggle("hide", t !== test);
     });
@@ -228,11 +363,6 @@
     return "p = " + s;
   }
 
-  function ital(s) {
-    // If you later want actual italics, wrap with <em> and output as HTML.
-    return s;
-  }
-
   function genCorrelation(style) {
     const v1 = $("corr_var1").value.trim() || "Variable 1";
     const v2 = $("corr_var2").value.trim() || "Variable 2";
@@ -240,15 +370,14 @@
     const nVal = num($("corr_n").value);
     if (df === null && nVal !== null) df = nVal - 2;
     const r = num($("corr_r").value);
+    const pRaw = num($("corr_p").value);
     const pText = fmtP($("corr_p").value);
 
-    if (r === null || pText === null) {
-      return "Please enter at least r and p.";
-    }
+    if (r === null || pText === null) return "Please enter at least r and p.";
 
     const rTxt = r.toFixed(2).replace(/^0/, "");
     const dfTxt = (df !== null && df >= 1) ? `(${df})` : "";
-    const sigWord = (pText.startsWith("p <") || num($("corr_p").value) < 0.05) ? "significant" : "non-significant";
+    const sigWord = (pText.startsWith("p <") || (pRaw !== null && pRaw < 0.05)) ? "significant" : "non-significant";
     const dir = r > 0 ? "positive" : "negative";
 
     if (style === "sentence") {
@@ -256,6 +385,36 @@
     }
     return `A Pearson correlation was conducted to examine the association between ${v1} and ${v2}. ` +
            `Results indicated a ${sigWord} ${dir} correlation, r${dfTxt} = ${rTxt}, ${pText}.`;
+  }
+
+  function genZTestOne(style) {
+    const dv = $("z_dv").value.trim() || "the outcome";
+    const ref = $("z_ref").value.trim();
+    const m = $("z_m").value.trim();
+    const zVal = num($("z_z").value);
+    const pRaw = num($("z_p").value);
+    const pText = fmtP($("z_p").value);
+    const nVal = num($("z_n").value);
+    const rEff = num($("z_r").value);
+
+    if (!ref || !m || zVal === null || pText === null) {
+      return "Please enter the sample value, comparison value, z, and p (n and effect size r are optional).";
+    }
+
+    const sigWord = (pText.startsWith("p <") || (pRaw !== null && pRaw < 0.05)) ? "significant" : "non-significant";
+    const dir = (num(m) !== null && num(ref) !== null)
+      ? (num(m) > num(ref) ? "greater than" : (num(m) < num(ref) ? "less than" : "equal to"))
+      : "different from";
+
+    const zTxt = zVal.toFixed(2);
+    const nTxt = (nVal !== null && nVal >= 1) ? `, n = ${nVal}` : "";
+    const rTxt = (rEff !== null) ? `, r = ${rEff.toFixed(2).replace(/^0/, "")}` : "";
+
+    if (style === "sentence") {
+      return `A one-sample z test showed a ${sigWord} difference in ${dv}, with the sample value (${m}) ${dir} the comparison value (${ref}), z = ${zTxt}, ${pText}${rTxt}${nTxt}.`;
+    }
+    return `A one-sample z test was conducted to compare ${dv} against a reference value (${ref}). ` +
+           `Results indicated a ${sigWord} difference, with the sample value (${m}) ${dir} the reference value, z = ${zTxt}, ${pText}${rTxt}${nTxt}.`;
   }
 
   function genTTestInd(style) {
@@ -268,6 +427,7 @@
     const sd2 = fmt2($("t_sd2").value);
     const tVal = num($("t_t").value);
     const df = num($("t_df").value);
+    const pRaw = num($("t_p").value);
     const pText = fmtP($("t_p").value);
     const d = num($("t_d").value);
 
@@ -277,17 +437,72 @@
 
     const tTxt = tVal.toFixed(2);
     const dTxt = (d !== null) ? `, d = ${d.toFixed(2)}` : "";
-    const sigWord = (pText.startsWith("p <") || num($("t_p").value) < 0.05) ? "significant" : "non-significant";
+    const sigWord = (pText.startsWith("p <") || (pRaw !== null && pRaw < 0.05)) ? "significant" : "non-significant";
 
-    // Decide direction based on means
-    const higher = (Number(m1) > Number(m2)) ? `${g1} (M = ${m1}, SD = ${sd1}) than ${g2} (M = ${m2}, SD = ${sd2})`
-                                             : `${g2} (M = ${m2}, SD = ${sd2}) than ${g1} (M = ${m1}, SD = ${sd1})`;
+    const higher = (Number(m1) > Number(m2))
+      ? `${g1} (M = ${m1}, SD = ${sd1}) than ${g2} (M = ${m2}, SD = ${sd2})`
+      : `${g2} (M = ${m2}, SD = ${sd2}) than ${g1} (M = ${m1}, SD = ${sd1})`;
 
     if (style === "sentence") {
       return `An independent-samples t-test showed a ${sigWord} difference in ${dv}, with higher scores for ${higher}, t(${df}) = ${tTxt}, ${pText}${dTxt}.`;
     }
     return `An independent-samples t-test was conducted to compare ${dv} between ${g1} and ${g2}. ` +
            `The difference was ${sigWord}, with higher scores for ${higher}, t(${df}) = ${tTxt}, ${pText}${dTxt}.`;
+  }
+
+  function genTTestPaired(style) {
+    const dv = $("tp_dv").value.trim() || "the outcome";
+    const c1 = $("tp_t1").value.trim() || "Condition 1";
+    const c2 = $("tp_t2").value.trim() || "Condition 2";
+    const m1 = fmt2($("tp_m1").value);
+    const sd1 = fmt2($("tp_sd1").value);
+    const m2 = fmt2($("tp_m2").value);
+    const sd2 = fmt2($("tp_sd2").value);
+    const tVal = num($("tp_t").value);
+    const df = num($("tp_df").value);
+    const pRaw = num($("tp_p").value);
+    const pText = fmtP($("tp_p").value);
+    const dz = num($("tp_dz").value);
+
+    if (tVal === null || df === null || pText === null || m1 === null || sd1 === null || m2 === null || sd2 === null) {
+      return "Please enter both condition means/SDs, t, df, and p (effect size dz is optional).";
+    }
+
+    const sigWord = (pText.startsWith("p <") || (pRaw !== null && pRaw < 0.05)) ? "significant" : "non-significant";
+    const dir = (Number(m2) > Number(m1)) ? "increased" : (Number(m2) < Number(m1) ? "decreased" : "did not change");
+    const dzTxt = (dz !== null) ? `, dz = ${dz.toFixed(2)}` : "";
+
+    if (style === "sentence") {
+      return `A paired-samples t-test showed a ${sigWord} change in ${dv} from ${c1} (M = ${m1}, SD = ${sd1}) to ${c2} (M = ${m2}, SD = ${sd2}); scores ${dir}, t(${df}) = ${tVal.toFixed(2)}, ${pText}${dzTxt}.`;
+    }
+    return `A paired-samples t-test was conducted to compare ${dv} between ${c1} and ${c2}. ` +
+           `Results indicated a ${sigWord} change, with scores ${dir} from ${c1} (M = ${m1}, SD = ${sd1}) to ${c2} (M = ${m2}, SD = ${sd2}), t(${df}) = ${tVal.toFixed(2)}, ${pText}${dzTxt}.`;
+  }
+
+  function genAnovaOneway(style) {
+    const dv = $("a_dv").value.trim() || "the outcome";
+    const iv = $("a_iv").value.trim() || "the grouping variable";
+    const k = num($("a_levels").value);
+    const fVal = num($("a_f").value);
+    const df1 = num($("a_df1").value);
+    const df2 = num($("a_df2").value);
+    const pRaw = num($("a_p").value);
+    const pText = fmtP($("a_p").value);
+    const eta = num($("a_eta").value);
+
+    if (fVal === null || df1 === null || df2 === null || pText === null) {
+      return "Please enter F, df1, df2, and p (k and η² are optional).";
+    }
+
+    const sigWord = (pText.startsWith("p <") || (pRaw !== null && pRaw < 0.05)) ? "significant" : "non-significant";
+    const etaTxt = (eta !== null) ? `, η² = ${eta.toFixed(2).replace(/^0/, "")}` : "";
+    const kTxt = (k !== null && k >= 2) ? ` across ${k} groups` : "";
+
+    if (style === "sentence") {
+      return `A one-way ANOVA showed a ${sigWord} effect of ${iv} on ${dv}${kTxt}, F(${df1}, ${df2}) = ${fVal.toFixed(2)}, ${pText}${etaTxt}.`;
+    }
+    return `A one-way ANOVA was conducted to examine whether ${dv} differed by ${iv}${kTxt}. ` +
+           `Results indicated a ${sigWord} effect, F(${df1}, ${df2}) = ${fVal.toFixed(2)}, ${pText}${etaTxt}.`;
   }
 
   function genRegSimple(style) {
@@ -297,6 +512,7 @@
     const se = num($("r_se").value);
     const tVal = num($("r_t").value);
     const df = num($("r_df").value);
+    const pRaw = num($("r_p").value);
     const pText = fmtP($("r_p").value);
     const r2 = num($("r_r2").value);
     const f = num($("r_f").value);
@@ -309,7 +525,7 @@
     const seTxt = (se !== null) ? `, SE = ${se.toFixed(2)}` : "";
     const r2Txt = (r2 !== null) ? `, R² = ${r2.toFixed(2).replace(/^0/, "")}` : "";
     const fTxt = (f !== null && r2 !== null) ? `, F(1, ${df}) = ${f.toFixed(2)}` : "";
-    const sigWord = (pText.startsWith("p <") || num($("r_p").value) < 0.05) ? "significantly" : "did not significantly";
+    const sigWord = (pText.startsWith("p <") || (pRaw !== null && pRaw < 0.05)) ? "significantly" : "did not significantly";
     const direction = b < 0 ? "negatively" : "positively";
 
     if (style === "sentence") {
@@ -323,13 +539,17 @@
     const test = $("test").value;
     const style = $("style").value;
     if (test === "corr") return genCorrelation(style);
+    if (test === "ztest_one") return genZTestOne(style);
     if (test === "ttest_ind") return genTTestInd(style);
+    if (test === "ttest_paired") return genTTestPaired(style);
+    if (test === "anova_oneway") return genAnovaOneway(style);
     if (test === "reg_simple") return genRegSimple(style);
     return "Select a test.";
   }
 
   $("test").addEventListener("change", (e) => showPanel(e.target.value));
   $("gen").addEventListener("click", () => { $("out").value = generate(); });
+
   $("copy").addEventListener("click", async () => {
     const text = $("out").value.trim();
     if (!text) return;
@@ -341,6 +561,7 @@
       alert("Copy failed — select the text and copy manually.");
     }
   });
+
   $("clear").addEventListener("click", () => {
     document.querySelectorAll("input").forEach(i => i.value = "");
     $("out").value = "";
