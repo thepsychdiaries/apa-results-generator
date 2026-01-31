@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>APA Results Generator</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; padding: 24px; line-height: 1.4; }
+    .wrap { max-width: 880px; margin: 0 auto; }
+    h1 { margin: 0 0 8px; font-size: 22px; }
+    p { margin: 0 0 16px; opacity: 0.85; }
+    .card { border: 1px solid #ddd; border-radius: 14px; padding: 16px; margin: 14px 0; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    label { display: block; font-size: 12px; opacity: 0.8; margin-bottom: 6px; }
+    input, select, textarea, button {
+      width: 100%; box-sizing: border-box; padding: 10px 12px; border-radius: 10px;
+      border: 1px solid #ccc; font-size: 14px;
+    }
+    textarea { min-height: 110px; resize: vertical; }
+    .row { display: flex; gap: 10px; align-items: center; }
+    .row > * { flex: 1; }
+    .btn { cursor: pointer; border: 1px solid #222; background: #222; color: #fff; }
+    .btn.secondary { background: #fff; color: #222; }
+    .hint { font-size: 12px; opacity: 0.7; margin-top: 10px; }
+    .hide { display: none; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>APA Results Generator (Student-Friendly)</h1>
+    <p>Choose a test, paste your numbers from STATA/output, and generate an APA-ready sentence. (Always follow your unit’s specific reporting rules.)</p>
+
+    <div class="card">
+      <div class="grid">
+        <div>
+          <label for="test">Test type</label>
+          <select id="test">
+            <option value="corr">Correlation (Pearson r)</option>
+            <option value="ttest_ind">Independent samples t-test</option>
+            <option value="reg_simple">Simple linear regression</option>
+          </select>
+        </div>
+        <div>
+          <label for="style">Output style</label>
+          <select id="style">
+            <option value="sentence">1 sentence</option>
+            <option value="mini">Mini paragraph (2–3 sentences)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Correlation -->
+    <div class="card" id="panel-corr">
+      <h2 style="margin:0 0 10px; font-size:16px;">Correlation (Pearson r)</h2>
+      <div class="grid">
+        <div>
+          <label for="corr_var1">Variable 1 (name)</label>
+          <input id="corr_var1" placeholder="e.g., Sleep quality" />
+        </div>
+        <div>
+          <label for="corr_var2">Variable 2 (name)</label>
+          <input id="corr_var2" placeholder="e.g., Stress" />
+        </div>
+        <div>
+          <label for="corr_r">r value</label>
+          <input id="corr_r" placeholder="e.g., 0.34 or -0.34" />
+        </div>
+        <div>
+          <label for="corr_df">df (optional)</label>
+          <input id="corr_df" placeholder="e.g., 98" />
+        </div>
+        <div>
+          <label for="corr_n">n (optional)</label>
+          <input id="corr_n" placeholder="e.g., 100" />
+        </div>
+        <div>
+          <label for="corr_p">p (enter decimal)</label>
+          <input id="corr_p" placeholder="e.g., 0.0004 or 0.043" />
+        </div>
+      </div>
+      <div class="hint">Tip: If you enter <span class="mono">n</span>, the tool can infer df = n − 2 when df is blank.</div>
+    </div>
+
+    <!-- Independent t-test -->
+    <div class="card hide" id="panel-ttest_ind">
+      <h2 style="margin:0 0 10px; font-size:16px;">Independent samples t-test</h2>
+      <div class="grid">
+        <div>
+          <label for="t_dv">Outcome (DV) label</label>
+          <input id="t_dv" placeholder="e.g., Anxiety score" />
+        </div>
+        <div>
+          <label for="t_g1">Group 1 label</label>
+          <input id="t_g1" placeholder="e.g., Control" />
+        </div>
+        <div>
+          <label for="t_g2">Group 2 label</label>
+          <input id="t_g2" placeholder="e.g., Treatment" />
+        </div>
+        <div>
+          <label for="t_m1">Group 1 mean (M)</label>
+          <input id="t_m1" placeholder="e.g., 5.20" />
+        </div>
+        <div>
+          <label for="t_sd1">Group 1 SD</label>
+          <input id="t_sd1" placeholder="e.g., 1.10" />
+        </div>
+        <div>
+          <label for="t_m2">Group 2 mean (M)</label>
+          <input id="t_m2" placeholder="e.g., 4.10" />
+        </div>
+        <div>
+          <label for="t_sd2">Group 2 SD</label>
+          <input id="t_sd2" placeholder="e.g., 1.30" />
+        </div>
+        <div>
+          <label for="t_t">t value</label>
+          <input id="t_t" placeholder="e.g., 3.12" />
+        </div>
+        <div>
+          <label for="t_df">df</label>
+          <input id="t_df" placeholder="e.g., 58" />
+        </div>
+        <div>
+          <label for="t_p">p (decimal)</label>
+          <input id="t_p" placeholder="e.g., 0.003 or 0.043" />
+        </div>
+        <div>
+          <label for="t_d">Cohen’s d (optional)</label>
+          <input id="t_d" placeholder="e.g., 0.82" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Simple regression -->
+    <div class="card hide" id="panel-reg_simple">
+      <h2 style="margin:0 0 10px; font-size:16px;">Simple linear regression</h2>
+      <div class="grid">
+        <div>
+          <label for="r_dv">DV label</label>
+          <input id="r_dv" placeholder="e.g., Sleep quality" />
+        </div>
+        <div>
+          <label for="r_iv">IV label</label>
+          <input id="r_iv" placeholder="e.g., Stress" />
+        </div>
+        <div>
+          <label for="r_b">Unstandardized b</label>
+          <input id="r_b" placeholder="e.g., -0.42" />
+        </div>
+        <div>
+          <label for="r_se">SE (optional)</label>
+          <input id="r_se" placeholder="e.g., 0.12" />
+        </div>
+        <div>
+          <label for="r_t">t value</label>
+          <input id="r_t" placeholder="e.g., -3.50" />
+        </div>
+        <div>
+          <label for="r_df">df</label>
+          <input id="r_df" placeholder="e.g., 98" />
+        </div>
+        <div>
+          <label for="r_p">p (decimal)</label>
+          <input id="r_p" placeholder="e.g., 0.0004 or 0.043" />
+        </div>
+        <div>
+          <label for="r_r2">R² (optional)</label>
+          <input id="r_r2" placeholder="e.g., 0.11" />
+        </div>
+        <div>
+          <label for="r_f">F (optional)</label>
+          <input id="r_f" placeholder="e.g., 12.25" />
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <button class="btn" id="gen">Generate</button>
+        <button class="btn secondary" id="copy">Copy</button>
+        <button class="btn secondary" id="clear">Clear</button>
+      </div>
+      <div style="margin-top:12px;">
+        <label for="out">APA output</label>
+        <textarea id="out" readonly></textarea>
+        <div class="hint">Formatting rules: italic letters are shown as plain text here (t, p, r, F). You can italicize in your document if required.</div>
+      </div>
+    </div>
+
+    <p class="hint">Disclaimer: This tool formats text. It does not verify assumptions or whether your test choice is appropriate.</p>
+  </div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+
+  function showPanel(test) {
+    ["corr", "ttest_ind", "reg_simple"].forEach(t => {
+      const panel = $("panel-" + t);
+      panel.classList.toggle("hide", t !== test);
+    });
+  }
+
+  function num(x) {
+    if (x == null) return null;
+    const s = String(x).trim();
+    if (!s) return null;
+    const n = Number(s);
+    return Number.isFinite(n) ? n : null;
+  }
+
+  function fmt2(x) {
+    const n = num(x);
+    if (n === null) return null;
+    return (Math.round(n * 100) / 100).toFixed(2);
+  }
+
+  // APA p formatting:
+  // - if p < .001 => "p < .001"
+  // - else => "p = .xyz" (3 dp, leading zero removed)
+  function fmtP(pRaw) {
+    const p = num(pRaw);
+    if (p === null) return null;
+    if (p < 0.001) return "p < .001";
+    const s = p.toFixed(3).replace(/^0/, "");
+    return "p = " + s;
+  }
+
+  function ital(s) {
+    // If you later want actual italics, wrap with <em> and output as HTML.
+    return s;
+  }
+
+  function genCorrelation(style) {
+    const v1 = $("corr_var1").value.trim() || "Variable 1";
+    const v2 = $("corr_var2").value.trim() || "Variable 2";
+    let df = num($("corr_df").value);
+    const nVal = num($("corr_n").value);
+    if (df === null && nVal !== null) df = nVal - 2;
+    const r = num($("corr_r").value);
+    const pText = fmtP($("corr_p").value);
+
+    if (r === null || pText === null) {
+      return "Please enter at least r and p.";
+    }
+
+    const rTxt = r.toFixed(2).replace(/^0/, "");
+    const dfTxt = (df !== null && df >= 1) ? `(${df})` : "";
+    const sigWord = (pText.startsWith("p <") || num($("corr_p").value) < 0.05) ? "significant" : "non-significant";
+    const dir = r > 0 ? "positive" : "negative";
+
+    if (style === "sentence") {
+      return `There was a ${sigWord} ${dir} correlation between ${v1} and ${v2}, r${dfTxt} = ${rTxt}, ${pText}.`;
+    }
+    return `A Pearson correlation was conducted to examine the association between ${v1} and ${v2}. ` +
+           `Results indicated a ${sigWord} ${dir} correlation, r${dfTxt} = ${rTxt}, ${pText}.`;
+  }
+
+  function genTTestInd(style) {
+    const dv = $("t_dv").value.trim() || "the outcome";
+    const g1 = $("t_g1").value.trim() || "Group 1";
+    const g2 = $("t_g2").value.trim() || "Group 2";
+    const m1 = fmt2($("t_m1").value);
+    const sd1 = fmt2($("t_sd1").value);
+    const m2 = fmt2($("t_m2").value);
+    const sd2 = fmt2($("t_sd2").value);
+    const tVal = num($("t_t").value);
+    const df = num($("t_df").value);
+    const pText = fmtP($("t_p").value);
+    const d = num($("t_d").value);
+
+    if (tVal === null || df === null || pText === null || m1 === null || sd1 === null || m2 === null || sd2 === null) {
+      return "Please enter group means/SDs, t, df, and p (Cohen’s d is optional).";
+    }
+
+    const tTxt = tVal.toFixed(2);
+    const dTxt = (d !== null) ? `, d = ${d.toFixed(2)}` : "";
+    const sigWord = (pText.startsWith("p <") || num($("t_p").value) < 0.05) ? "significant" : "non-significant";
+
+    // Decide direction based on means
+    const higher = (Number(m1) > Number(m2)) ? `${g1} (M = ${m1}, SD = ${sd1}) than ${g2} (M = ${m2}, SD = ${sd2})`
+                                             : `${g2} (M = ${m2}, SD = ${sd2}) than ${g1} (M = ${m1}, SD = ${sd1})`;
+
+    if (style === "sentence") {
+      return `An independent-samples t-test showed a ${sigWord} difference in ${dv}, with higher scores for ${higher}, t(${df}) = ${tTxt}, ${pText}${dTxt}.`;
+    }
+    return `An independent-samples t-test was conducted to compare ${dv} between ${g1} and ${g2}. ` +
+           `The difference was ${sigWord}, with higher scores for ${higher}, t(${df}) = ${tTxt}, ${pText}${dTxt}.`;
+  }
+
+  function genRegSimple(style) {
+    const dv = $("r_dv").value.trim() || "the DV";
+    const iv = $("r_iv").value.trim() || "the IV";
+    const b = num($("r_b").value);
+    const se = num($("r_se").value);
+    const tVal = num($("r_t").value);
+    const df = num($("r_df").value);
+    const pText = fmtP($("r_p").value);
+    const r2 = num($("r_r2").value);
+    const f = num($("r_f").value);
+
+    if (b === null || tVal === null || df === null || pText === null) {
+      return "Please enter at least b, t, df, and p (SE, R², and F are optional).";
+    }
+
+    const bTxt = b.toFixed(2);
+    const seTxt = (se !== null) ? `, SE = ${se.toFixed(2)}` : "";
+    const r2Txt = (r2 !== null) ? `, R² = ${r2.toFixed(2).replace(/^0/, "")}` : "";
+    const fTxt = (f !== null && r2 !== null) ? `, F(1, ${df}) = ${f.toFixed(2)}` : "";
+    const sigWord = (pText.startsWith("p <") || num($("r_p").value) < 0.05) ? "significantly" : "did not significantly";
+    const direction = b < 0 ? "negatively" : "positively";
+
+    if (style === "sentence") {
+      return `A simple linear regression showed that ${iv} ${sigWord} predicted ${dv} (${direction}), b = ${bTxt}${seTxt}, t(${df}) = ${tVal.toFixed(2)}, ${pText}${r2Txt}${fTxt}.`;
+    }
+    return `A simple linear regression was conducted to test whether ${iv} predicted ${dv}. ` +
+           `Results indicated that ${iv} ${sigWord} predicted ${dv} (${direction}), b = ${bTxt}${seTxt}, t(${df}) = ${tVal.toFixed(2)}, ${pText}${r2Txt}${fTxt}.`;
+  }
+
+  function generate() {
+    const test = $("test").value;
+    const style = $("style").value;
+    if (test === "corr") return genCorrelation(style);
+    if (test === "ttest_ind") return genTTestInd(style);
+    if (test === "reg_simple") return genRegSimple(style);
+    return "Select a test.";
+  }
+
+  $("test").addEventListener("change", (e) => showPanel(e.target.value));
+  $("gen").addEventListener("click", () => { $("out").value = generate(); });
+  $("copy").addEventListener("click", async () => {
+    const text = $("out").value.trim();
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      $("copy").textContent = "Copied!";
+      setTimeout(() => $("copy").textContent = "Copy", 900);
+    } catch {
+      alert("Copy failed — select the text and copy manually.");
+    }
+  });
+  $("clear").addEventListener("click", () => {
+    document.querySelectorAll("input").forEach(i => i.value = "");
+    $("out").value = "";
+  });
+
+  // init
+  showPanel($("test").value);
+</script>
+</body>
+</html>
