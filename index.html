@@ -5,11 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>APA Results Generator</title>
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 0; padding: 24px; line-height: 1.4; }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin: 0;
+      padding: 24px;
+      line-height: 1.4;
+      background: #f5f6f5;
+    }
     .wrap { max-width: 880px; margin: 0 auto; }
     h1 { margin: 0 0 8px; font-size: 22px; }
     p { margin: 0 0 16px; opacity: 0.85; }
-    .card { border: 1px solid #ddd; border-radius: 14px; padding: 16px; margin: 14px 0; }
+    .card { border: 1px solid #ddd; border-radius: 14px; padding: 16px; margin: 14px 0; background: #fff; }
     .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
     label { display: block; font-size: 12px; opacity: 0.8; margin-bottom: 6px; }
     input, select, textarea, button {
@@ -24,11 +30,23 @@
     .hint { font-size: 12px; opacity: 0.7; margin-top: 10px; }
     .hide { display: none; }
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+
+    /* Logo */
+    #logo {
+      position: fixed;
+      top: 14px;
+      left: 18px;
+      width: 90px; /* tweak if you want smaller/larger */
+      height: auto;
+      z-index: 999;
+    }
   </style>
 </head>
 <body>
+  <img src="logo.png" id="logo" alt="The Psych Diaries logo" />
+
   <div class="wrap">
-    <h1>APA Results Generator (Student-Friendly)</h1>
+    <h1>APA Results Generator (7th Edition)</h1>
     <p>Choose a test, paste your numbers from STATA/output, and generate an APA-ready sentence. (Always follow your unit’s specific reporting rules.)</p>
 
     <div class="card">
@@ -312,7 +330,7 @@
     return cleanNegZero(v).toFixed(dp);
   }
 
-  // For bounded stats like r, p, R², η²: remove leading zero.
+  // For bounded stats like r, p, R²: remove leading zero.
   function noLeadingZero(s) {
     return String(s).replace(/^0\./, ".").replace(/^-0\./, "-.");
   }
@@ -439,4 +457,69 @@
     }
     return `A paired-samples t test was conducted to compare ${dv} between ${c1} and ${c2}. ` +
            `Scores were ${m1} (SD = ${sd1}) at ${c1} and ${m2} (SD = ${sd2}) at ${c2}. ` +
-           `The test yielded t($
+           `The test yielded t(${df}) = ${tTxt}, ${pText}${dzTxt}.`;
+  }
+
+  function genRegSimple(style) {
+    const dv = $("r_dv").value.trim() || "the DV";
+    const iv = $("r_iv").value.trim() || "the IV";
+    const b = num($("r_b").value);
+    const se = num($("r_se").value);
+    const tVal = num($("r_t").value);
+    const df = fmtDfInt($("r_df").value);
+    const pText = fmtP($("r_p").value);
+    const r2 = num($("r_r2").value);
+    const f = num($("r_f").value);
+
+    if (b === null || tVal === null || !df || pText === null) {
+      return "Please enter at least b, t, df, and p (SE, R², and F are optional).";
+    }
+
+    const bTxt = fmtFixed(b, 2);                 // unbounded -> keep leading zero if any
+    const seTxt = (se !== null) ? `, SE = ${fmtFixed(se, 2)}` : "";
+    const r2Txt = (r2 !== null) ? `, R² = ${fmtBounded(r2, 2)}` : "";
+    const fTxt = (f !== null && r2 !== null) ? `, F(1, ${df}) = ${fmtFixed(f, 2)}` : "";
+
+    if (style === "sentence") {
+      return `A simple linear regression predicting ${dv} from ${iv} yielded b = ${bTxt}${seTxt}, t(${df}) = ${fmtFixed(tVal, 2)}, ${pText}${r2Txt}${fTxt}.`;
+    }
+    return `A simple linear regression was conducted to test whether ${iv} predicted ${dv}. ` +
+           `The model yielded b = ${bTxt}${seTxt}, t(${df}) = ${fmtFixed(tVal, 2)}, ${pText}${r2Txt}${fTxt}.`;
+  }
+
+  function generate() {
+    const test = $("test").value;
+    const style = $("style").value;
+    if (test === "corr") return genCorrelation(style);
+    if (test === "ztest_one") return genZTestOne(style);
+    if (test === "ttest_ind") return genTTestInd(style);
+    if (test === "ttest_paired") return genTTestPaired(style);
+    if (test === "reg_simple") return genRegSimple(style);
+    return "Select a test.";
+  }
+
+  $("test").addEventListener("change", (e) => showPanel(e.target.value));
+  $("gen").addEventListener("click", () => { $("out").value = generate(); });
+
+  $("copy").addEventListener("click", async () => {
+    const text = $("out").value.trim();
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      $("copy").textContent = "Copied!";
+      setTimeout(() => $("copy").textContent = "Copy", 900);
+    } catch {
+      alert("Copy failed — select the text and copy manually.");
+    }
+  });
+
+  $("clear").addEventListener("click", () => {
+    document.querySelectorAll("input").forEach(i => i.value = "");
+    $("out").value = "";
+  });
+
+  // init
+  showPanel($("test").value);
+</script>
+</body>
+</html>
